@@ -124,6 +124,32 @@ const submitImport = () => {
         }
     })
 }
+
+const copyLink = (guest: any) => {
+    const url = route('invitation.show', { slug: props.wedding.slug, guest: guest.secure_token })
+    navigator.clipboard.writeText(url).then(() => {
+        alert('Link undangan berhasil disalin!')
+    }).catch(err => {
+        console.error('Gagal menyalin link: ', err)
+        alert('Gagal menyalin link. Silakan salin manual: ' + url)
+    })
+}
+
+const sendWhatsapp = (guest: any) => {
+    const url = route('invitation.show', { slug: props.wedding.slug, guest: guest.secure_token })
+    const text = `Kepada Yth. ${guest.name},\n\nTanpa mengurangi rasa hormat, perkenankan kami mengundang Bapak/Ibu/Saudara/i untuk hadir dan memberikan doa restu pada acara pernikahan kami.\n\nBerikut adalah tautan undangan pernikahan kami:\n${url}\n\nKehadiran Anda adalah suatu kehormatan dan kebahagiaan bagi kami.\n\nTerima kasih.`
+    
+    let waNumber = guest.whatsapp_number
+    if (waNumber) {
+        waNumber = waNumber.replace(/[^0-9]/g, '')
+        if (waNumber.startsWith('0')) {
+            waNumber = '62' + waNumber.substring(1)
+        }
+        window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(text)}`, '_blank')
+    } else {
+        window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank')
+    }
+}
 </script>
 
 <template>
@@ -195,6 +221,8 @@ const submitImport = () => {
                                         <span v-else class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">Belum</span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <button @click="copyLink(guest)" class="text-blue-600 hover:text-blue-900 mr-3" title="Salin Link Undangan">Salin Link</button>
+                                        <button @click="sendWhatsapp(guest)" class="text-green-600 hover:text-green-900 mr-3" title="Kirim via WhatsApp">WhatsApp</button>
                                         <button @click="openEditModal(guest)" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</button>
                                         <button @click="confirmDelete(guest)" class="text-red-600 hover:text-red-900">Hapus</button>
                                     </td>
