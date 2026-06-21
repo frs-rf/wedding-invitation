@@ -17,6 +17,7 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.VPS_SSH_KEY }}
+          passphrase: ${{ secrets.VPS_PASSPHRASE }}
           port: ${{ secrets.VPS_PORT || '22' }}
           # Ubah "cd /var/www/wedding-invitation/app" di bawah ini 
           # ke path instalasi Anda sebenarnya di dalam VPS.
