@@ -32,9 +32,13 @@ jobs:
               cp .env.example .env
             fi
             
-            # Rebuild and start containers
+            # Rebuild and extract assets
             docker compose pull || true
             docker compose build
+            
+            # Extract compiled frontend assets from the new image to host's public directory
+            docker run --rm -v $(pwd)/public:/export wedding-invitation-app cp -a /var/www/html/public/build /export/ || true
+            
             docker compose up -d
             
             # Run migrations inside the app container
