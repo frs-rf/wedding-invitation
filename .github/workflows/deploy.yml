@@ -1,0 +1,55 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy Application
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Execute Remote SSH Commands
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || '22' }}
+          # Ubah "cd /var/www/wedding-invitation/app" di bawah ini 
+          # ke path instalasi Anda sebenarnya di dalam VPS.
+          script: |
+            cd /var/www/wedding-invitation/app
+            
+            # Put application into maintenance mode
+            php artisan down --refresh=15 || true
+            
+            # Pull latest changes
+            git pull origin main
+            
+            # Install PHP dependencies
+            composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
+            
+            # Install Node dependencies and build assets
+            npm ci
+            npm run build
+            
+            # Run database migrations
+            php artisan migrate --force
+            
+            # Clear caches
+            php artisan optimize:clear
+            php artisan config:cache
+            php artisan event:cache
+            php artisan route:cache
+            php artisan view:cache
+            
+            # Restart queue worker
+            php artisan queue:restart
+            
+            # Bring application out of maintenance mode
+            php artisan up
+            
+            echo "Deployment to VPS completed successfully!"
