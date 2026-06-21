@@ -36,6 +36,7 @@ class GuestsImport implements ToModel, WithHeadingRow, WithBatchInserts, WithChu
             'is_vip' => $isVip,
             'company_or_address' => $row['alamatinstansi'] ?? null,
             'relationship' => $row['relasi'] ?? null,
+            'secure_token' => Guest::generateToken(),
         ]);
     }
 
