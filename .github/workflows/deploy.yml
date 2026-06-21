@@ -24,33 +24,30 @@ jobs:
           script: |
             cd /var/www/wedding-invitation/app
             
-            # Put application into maintenance mode
-            php artisan down --refresh=15 || true
-            
             # Pull latest changes
             git pull origin main
             
-            # Install PHP dependencies
-            composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
+            # Ensure DB environment variables are loaded
+            if [ ! -f .env ]; then
+              cp .env.example .env
+            fi
             
-            # Install Node dependencies and build assets
-            npm ci
-            npm run build
+            # Rebuild and start containers
+            docker compose pull || true
+            docker compose build
+            docker compose up -d
             
-            # Run database migrations
-            php artisan migrate --force
+            # Run migrations inside the app container
+            docker compose exec -T app php artisan migrate --force
             
             # Clear caches
-            php artisan optimize:clear
-            php artisan config:cache
-            php artisan event:cache
-            php artisan route:cache
-            php artisan view:cache
+            docker compose exec -T app php artisan optimize:clear
+            docker compose exec -T app php artisan config:cache
+            docker compose exec -T app php artisan event:cache
+            docker compose exec -T app php artisan route:cache
+            docker compose exec -T app php artisan view:cache
             
-            # Restart queue worker
-            php artisan queue:restart
+            # Restart queue worker container
+            docker compose restart worker
             
-            # Bring application out of maintenance mode
-            php artisan up
-            
-            echo "Deployment to VPS completed successfully!"
+            echo "Docker Deployment to VPS completed successfully!"
