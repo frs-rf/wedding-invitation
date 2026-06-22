@@ -11,9 +11,13 @@ import {
   DropdownMenuTrigger,
 } from '@/Components/ui/dropdown-menu'
 import { Button } from '@/Components/ui/button'
-import { Menu, X, User } from 'lucide-vue-next'
+import { Menu, X, User, Sun, Moon } from 'lucide-vue-next'
+import { useDark, useToggle } from '@vueuse/core'
 
 const showingNavigationDropdown = ref(false);
+
+const isDark = useDark()
+const toggleDark = useToggle(isDark)
 </script>
 
 <template>
@@ -44,6 +48,13 @@ const showingNavigationDropdown = ref(false);
                 </div>
 
                 <div class="hidden sm:flex items-center gap-4">
+                    <!-- Theme Toggle -->
+                    <Button variant="ghost" size="icon" @click="toggleDark()" class="h-9 w-9 rounded-full">
+                        <Sun v-if="isDark" class="h-4 w-4" />
+                        <Moon v-else class="h-4 w-4" />
+                        <span class="sr-only">Toggle theme</span>
+                    </Button>
+
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="ghost" class="relative h-9 w-9 rounded-full focus-visible:ring-1 focus-visible:ring-zinc-400">
@@ -72,7 +83,12 @@ const showingNavigationDropdown = ref(false);
                 </div>
 
                 <!-- Mobile Menu Button -->
-                <div class="flex sm:hidden">
+                <div class="flex sm:hidden items-center gap-2">
+                    <Button variant="ghost" size="icon" @click="toggleDark()" class="h-9 w-9 rounded-full">
+                        <Sun v-if="isDark" class="h-4 w-4" />
+                        <Moon v-else class="h-4 w-4" />
+                        <span class="sr-only">Toggle theme</span>
+                    </Button>
                     <Button variant="ghost" size="icon" @click="showingNavigationDropdown = !showingNavigationDropdown">
                         <Menu v-if="!showingNavigationDropdown" class="h-6 w-6" />
                         <X v-else class="h-6 w-6" />

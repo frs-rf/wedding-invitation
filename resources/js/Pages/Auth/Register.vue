@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import { Button } from '@/Components/ui/button';
+import { Input } from '@/Components/ui/input';
+import { Label } from '@/Components/ui/label';
 
 const form = useForm({
     name: '',
@@ -24,91 +23,78 @@ const submit = () => {
 
 <template>
     <GuestLayout>
-        <Head title="Register" />
+        <Head title="Daftar Akun" />
 
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="name" value="Name" />
+        <div class="mb-6 text-center">
+            <h1 class="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">Daftar Akun Vendor</h1>
+            <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-2">Buat akun untuk mengelola klien pengantin Anda</p>
+        </div>
 
-                <TextInput
+        <form @submit.prevent="submit" class="space-y-6">
+            <div class="space-y-2">
+                <Label for="name" :class="{ 'text-red-500': form.errors.name }">Nama Lengkap / Nama WO</Label>
+                <Input
                     id="name"
                     type="text"
-                    class="mt-1 block w-full"
                     v-model="form.name"
                     required
                     autofocus
                     autocomplete="name"
+                    :class="{ 'border-red-500 focus-visible:ring-red-500': form.errors.name }"
                 />
-
-                <InputError class="mt-2" :message="form.errors.name" />
+                <p v-if="form.errors.name" class="text-sm text-red-500">{{ form.errors.name }}</p>
             </div>
 
-            <div class="mt-4">
-                <InputLabel for="email" value="Email" />
-
-                <TextInput
+            <div class="space-y-2">
+                <Label for="email" :class="{ 'text-red-500': form.errors.email }">Email</Label>
+                <Input
                     id="email"
                     type="email"
-                    class="mt-1 block w-full"
                     v-model="form.email"
                     required
                     autocomplete="username"
+                    :class="{ 'border-red-500 focus-visible:ring-red-500': form.errors.email }"
                 />
-
-                <InputError class="mt-2" :message="form.errors.email" />
+                <p v-if="form.errors.email" class="text-sm text-red-500">{{ form.errors.email }}</p>
             </div>
 
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
-
-                <TextInput
+            <div class="space-y-2">
+                <Label for="password" :class="{ 'text-red-500': form.errors.password }">Password</Label>
+                <Input
                     id="password"
                     type="password"
-                    class="mt-1 block w-full"
                     v-model="form.password"
                     required
                     autocomplete="new-password"
+                    :class="{ 'border-red-500 focus-visible:ring-red-500': form.errors.password }"
                 />
-
-                <InputError class="mt-2" :message="form.errors.password" />
+                <p v-if="form.errors.password" class="text-sm text-red-500">{{ form.errors.password }}</p>
             </div>
 
-            <div class="mt-4">
-                <InputLabel
-                    for="password_confirmation"
-                    value="Confirm Password"
-                />
-
-                <TextInput
+            <div class="space-y-2">
+                <Label for="password_confirmation" :class="{ 'text-red-500': form.errors.password_confirmation }">Konfirmasi Password</Label>
+                <Input
                     id="password_confirmation"
                     type="password"
-                    class="mt-1 block w-full"
                     v-model="form.password_confirmation"
                     required
                     autocomplete="new-password"
+                    :class="{ 'border-red-500 focus-visible:ring-red-500': form.errors.password_confirmation }"
                 />
-
-                <InputError
-                    class="mt-2"
-                    :message="form.errors.password_confirmation"
-                />
+                <p v-if="form.errors.password_confirmation" class="text-sm text-red-500">{{ form.errors.password_confirmation }}</p>
             </div>
 
-            <div class="mt-4 flex items-center justify-end">
-                <Link
-                    :href="route('login')"
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                >
-                    Already registered?
-                </Link>
-
-                <PrimaryButton
-                    class="ms-4"
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
-                >
-                    Register
-                </PrimaryButton>
+            <Button
+                type="submit"
+                class="w-full"
+                :disabled="form.processing"
+            >
+                Daftar
+            </Button>
+            
+            <div class="text-center text-sm text-zinc-500 mt-4">
+                Sudah punya akun?
+                <Link :href="route('login')" class="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400">Masuk di sini</Link>
             </div>
         </form>
     </GuestLayout>
