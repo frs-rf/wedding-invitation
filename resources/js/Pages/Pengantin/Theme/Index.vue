@@ -88,7 +88,7 @@ const submit = () => {
                                 ]"
                                 @click="form.theme_id = theme.id">
                                 
-                                <div class="aspect-[4/3] bg-zinc-100 dark:bg-zinc-900 flex items-center justify-center p-4">
+                                <div class="aspect-video bg-zinc-100 dark:bg-zinc-900 flex items-center justify-center p-4">
                                     <div class="text-center">
                                         <div class="w-16 h-16 mx-auto rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center mb-3">
                                             <LayoutTemplate class="h-8 w-8 text-indigo-600 dark:text-indigo-400" />
