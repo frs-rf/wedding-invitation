@@ -41,10 +41,10 @@ import { Link } from '@inertiajs/vue3';
             
             <div class="mt-auto space-y-sm">
                 <slot name="sidebar-bottom">
-                    <button v-if="$page.props.auth?.user?.role === 'Vendor'" class="w-full bg-[#1b1b1e] text-white font-label-sm text-[14px] py-sm rounded-xl mb-md flex items-center justify-center gap-xs hover:opacity-90 transition-opacity">
+                    <Link v-if="$page.props.auth?.user?.role === 'Vendor'" :href="route('vendor.clients.create')" class="w-full bg-[#1b1b1e] text-white font-label-sm text-[14px] py-sm rounded-xl mb-md flex items-center justify-center gap-xs hover:opacity-90 transition-opacity">
                         <span class="material-symbols-outlined text-[18px]">add</span>
                         Add New Wedding
-                    </button>
+                    </Link>
                     <Link href="#" class="flex items-center gap-md px-md py-sm text-[#5d5e66] hover:bg-[#eae7eb] rounded-xl transition-all text-[14px]">
                         <span class="material-symbols-outlined text-[20px]">help</span>
                         <span>Support</span>

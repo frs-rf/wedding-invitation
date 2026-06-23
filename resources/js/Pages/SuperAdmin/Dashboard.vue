@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import AppLayout from '@/Layouts/AppLayout.vue'
+import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 import { Head } from '@inertiajs/vue3'
-import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card'
-import { Users, Store, Tent } from 'lucide-vue-next'
 
 const props = defineProps<{
     stats?: {
@@ -14,57 +12,60 @@ const props = defineProps<{
 </script>
 
 <template>
-    <AppLayout title="Dashboard Super Admin">
-        <Head title="Dashboard Super Admin" />
+    <Head title="Dashboard Super Admin" />
 
-        <div class="space-y-8">
+    <DashboardLayout>
+        <!-- Welcome Header -->
+        <header class="flex flex-col md:flex-row md:items-end justify-between gap-lg mb-xl">
             <div>
-                <h1 class="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">Dashboard Super Admin</h1>
-                <p class="text-zinc-500 dark:text-zinc-400 mt-2">
-                    Global observability &amp; manajemen seluruh vendor di sistem.
-                </p>
+                <h2 class="font-display text-[36px] tracking-tight text-[#1b1b1e] font-bold">Dashboard Super Admin</h2>
+                <p class="font-body-lg text-[16px] text-[#5d5e66]">Global observability &amp; manajemen seluruh vendor di sistem.</p>
+            </div>
+        </header>
+
+        <!-- Bento Grid Summary -->
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg mb-xl">
+            <!-- Total Vendor -->
+            <div class="bg-white border border-[#e4e1e6] p-lg rounded-2xl flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow">
+                <div class="flex justify-between items-start">
+                    <div class="w-10 h-10 rounded-lg bg-[#e2f5ea] flex items-center justify-center">
+                        <span class="material-symbols-outlined text-[#006b3f]">storefront</span>
+                    </div>
+                    <span class="text-[#5d5e66] font-label-xs text-[12px] uppercase tracking-wider font-bold">Total Vendor</span>
+                </div>
+                <div class="mt-lg">
+                    <p class="font-display text-[36px] font-bold text-[#1b1b1e]">{{ stats?.total_vendors ?? 0 }}</p>
+                    <p class="font-label-sm text-[12px] text-[#5d5e66]">Vendor yang terdaftar di sistem</p>
+                </div>
             </div>
 
-            <div class="grid gap-4 sm:grid-cols-3">
-                <Card class="hover:shadow-md transition-shadow border-zinc-200 dark:border-zinc-800">
-                    <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle class="text-sm font-medium">Total Vendor</CardTitle>
-                        <Store class="h-4 w-4 text-emerald-500" />
-                    </CardHeader>
-                    <CardContent>
-                        <div class="text-3xl font-bold">{{ stats?.total_vendors ?? 0 }}</div>
-                        <p class="text-xs text-zinc-500 mt-1">
-                            Vendor yang terdaftar di sistem
-                        </p>
-                    </CardContent>
-                </Card>
-                
-                <Card class="hover:shadow-md transition-shadow border-zinc-200 dark:border-zinc-800">
-                    <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle class="text-sm font-medium">Total Pengantin</CardTitle>
-                        <Tent class="h-4 w-4 text-indigo-500" />
-                    </CardHeader>
-                    <CardContent>
-                        <div class="text-3xl font-bold">{{ stats?.total_pengantin ?? 0 }}</div>
-                        <p class="text-xs text-zinc-500 mt-1">
-                            Klien pengantin yang aktif
-                        </p>
-                    </CardContent>
-                </Card>
-                
-                <Card class="hover:shadow-md transition-shadow border-zinc-200 dark:border-zinc-800">
-                    <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle class="text-sm font-medium">Total Tamu</CardTitle>
-                        <Users class="h-4 w-4 text-amber-500" />
-                    </CardHeader>
-                    <CardContent>
-                        <div class="text-3xl font-bold">{{ stats?.total_guests ?? 0 }}</div>
-                        <p class="text-xs text-zinc-500 mt-1">
-                            Tamu undangan keseluruhan
-                        </p>
-                    </CardContent>
-                </Card>
+            <!-- Total Pengantin -->
+            <div class="bg-white border border-[#e4e1e6] p-lg rounded-2xl flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow">
+                <div class="flex justify-between items-start">
+                    <div class="w-10 h-10 rounded-lg bg-[#e2dfff] flex items-center justify-center">
+                        <span class="material-symbols-outlined text-[#1f108e]">festival</span>
+                    </div>
+                    <span class="text-[#5d5e66] font-label-xs text-[12px] uppercase tracking-wider font-bold">Total Pengantin</span>
+                </div>
+                <div class="mt-lg">
+                    <p class="font-display text-[36px] font-bold text-[#1b1b1e]">{{ stats?.total_pengantin ?? 0 }}</p>
+                    <p class="font-label-sm text-[12px] text-[#5d5e66]">Klien pengantin yang aktif</p>
+                </div>
             </div>
-        </div>
-    </AppLayout>
+
+            <!-- Total Tamu -->
+            <div class="bg-white border border-[#e4e1e6] p-lg rounded-2xl flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow">
+                <div class="flex justify-between items-start">
+                    <div class="w-10 h-10 rounded-lg bg-[#fff0d6] flex items-center justify-center">
+                        <span class="material-symbols-outlined text-[#8a5100]">groups</span>
+                    </div>
+                    <span class="text-[#5d5e66] font-label-xs text-[12px] uppercase tracking-wider font-bold">Total Tamu</span>
+                </div>
+                <div class="mt-lg">
+                    <p class="font-display text-[36px] font-bold text-[#1b1b1e]">{{ stats?.total_guests ?? 0 }}</p>
+                    <p class="font-label-sm text-[12px] text-[#5d5e66]">Tamu undangan keseluruhan</p>
+                </div>
+            </div>
+        </section>
+    </DashboardLayout>
 </template>
