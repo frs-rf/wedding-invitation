@@ -13,16 +13,35 @@ import { Link } from '@inertiajs/vue3';
             
             <nav class="flex-1 space-y-xs">
                 <slot name="sidebar-nav">
-                    <Link href="/ui-preview/vendor/dashboard" class="flex items-center gap-md px-md py-sm bg-[#e2dfff] text-[#1f108e] rounded-xl font-bold transition-all text-[14px]">
-                        <span class="material-symbols-outlined text-[20px]">dashboard</span>
-                        <span>Dashboard</span>
-                    </Link>
+                    <!-- Nav for Pengantin -->
+                    <template v-if="$page.props.auth?.user?.role === 'Pengantin'">
+                        <Link :href="route('dashboard')" class="flex items-center gap-md px-md py-sm rounded-xl font-bold transition-all text-[14px]" :class="route().current('dashboard') ? 'bg-[#e2dfff] text-[#1f108e]' : 'text-[#5d5e66] hover:bg-[#eae7eb]'">
+                            <span class="material-symbols-outlined text-[20px]">dashboard</span>
+                            <span>Dashboard</span>
+                        </Link>
+                        <Link :href="route('pengantin.themes.index')" class="flex items-center gap-md px-md py-sm rounded-xl font-bold transition-all text-[14px]" :class="route().current('pengantin.themes.*') ? 'bg-[#e2dfff] text-[#1f108e]' : 'text-[#5d5e66] hover:bg-[#eae7eb]'">
+                            <span class="material-symbols-outlined text-[20px]">palette</span>
+                            <span>Tema & Undangan</span>
+                        </Link>
+                        <Link :href="route('pengantin.guests.index')" class="flex items-center gap-md px-md py-sm rounded-xl font-bold transition-all text-[14px]" :class="route().current('pengantin.guests.*') ? 'bg-[#e2dfff] text-[#1f108e]' : 'text-[#5d5e66] hover:bg-[#eae7eb]'">
+                            <span class="material-symbols-outlined text-[20px]">book</span>
+                            <span>Buku Tamu</span>
+                        </Link>
+                    </template>
+                    
+                    <!-- Nav for Vendor (Default) -->
+                    <template v-else>
+                        <Link :href="route('dashboard')" class="flex items-center gap-md px-md py-sm bg-[#e2dfff] text-[#1f108e] rounded-xl font-bold transition-all text-[14px]">
+                            <span class="material-symbols-outlined text-[20px]">dashboard</span>
+                            <span>Dashboard</span>
+                        </Link>
+                    </template>
                 </slot>
             </nav>
             
             <div class="mt-auto space-y-sm">
                 <slot name="sidebar-bottom">
-                    <button class="w-full bg-[#1b1b1e] text-white font-label-sm text-[14px] py-sm rounded-xl mb-md flex items-center justify-center gap-xs hover:opacity-90 transition-opacity">
+                    <button v-if="$page.props.auth?.user?.role === 'Vendor'" class="w-full bg-[#1b1b1e] text-white font-label-sm text-[14px] py-sm rounded-xl mb-md flex items-center justify-center gap-xs hover:opacity-90 transition-opacity">
                         <span class="material-symbols-outlined text-[18px]">add</span>
                         Add New Wedding
                     </button>
@@ -30,7 +49,7 @@ import { Link } from '@inertiajs/vue3';
                         <span class="material-symbols-outlined text-[20px]">help</span>
                         <span>Support</span>
                     </Link>
-                    <Link href="#" class="flex items-center gap-md px-md py-sm text-[#5d5e66] hover:bg-[#eae7eb] rounded-xl transition-all text-[14px]">
+                    <Link :href="route('logout')" method="post" as="button" class="w-full flex items-center gap-md px-md py-sm text-[#5d5e66] hover:bg-[#eae7eb] rounded-xl transition-all text-[14px]">
                         <span class="material-symbols-outlined text-[20px]">logout</span>
                         <span>Sign Out</span>
                     </Link>

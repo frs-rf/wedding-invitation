@@ -50,21 +50,6 @@ const submit = () => {
     <Head title="Tema & Konten" />
 
     <DashboardLayout>
-        <!-- Top Navigation Area / Header specific to this page inside DashboardLayout -->
-        <template #sidebar-nav>
-            <Link href="#" class="flex items-center gap-md px-md py-sm text-[#5d5e66] hover:bg-[#eae7eb] rounded-xl transition-all text-[14px]">
-                <span class="material-symbols-outlined text-[20px]">dashboard</span>
-                <span>Dashboard</span>
-            </Link>
-            <Link :href="route('pengantin.themes.index')" class="flex items-center gap-md px-md py-sm bg-[#e2dfff] text-[#1f108e] rounded-xl font-bold transition-all text-[14px]">
-                <span class="material-symbols-outlined text-[20px]">palette</span>
-                <span>Tema & Undangan</span>
-            </Link>
-            <Link href="#" class="flex items-center gap-md px-md py-sm text-[#5d5e66] hover:bg-[#eae7eb] rounded-xl transition-all text-[14px]">
-                <span class="material-symbols-outlined text-[20px]">book</span>
-                <span>Buku Tamu</span>
-            </Link>
-        </template>
 
         <div class="mb-xl">
             <h2 class="font-display text-[28px] tracking-tight text-[#1b1b1e] font-bold">Tema & Konten Undangan</h2>

@@ -172,20 +172,6 @@ const toggleDropdown = (id: number) => {
     <Head title="Buku Tamu" />
 
     <DashboardLayout>
-        <template #sidebar-nav>
-            <Link :href="route('dashboard')" class="flex items-center gap-md px-md py-sm text-[#5d5e66] hover:bg-[#eae7eb] rounded-xl transition-all text-[14px]">
-                <span class="material-symbols-outlined text-[20px]">dashboard</span>
-                <span>Dashboard</span>
-            </Link>
-            <Link :href="route('pengantin.themes.index')" class="flex items-center gap-md px-md py-sm text-[#5d5e66] hover:bg-[#eae7eb] rounded-xl transition-all text-[14px]">
-                <span class="material-symbols-outlined text-[20px]">palette</span>
-                <span>Tema & Undangan</span>
-            </Link>
-            <Link :href="route('pengantin.guests.index')" class="flex items-center gap-md px-md py-sm bg-[#e2dfff] text-[#1f108e] rounded-xl font-bold transition-all text-[14px]">
-                <span class="material-symbols-outlined text-[20px]">book</span>
-                <span>Buku Tamu</span>
-            </Link>
-        </template>
 
         <!-- Header Section -->
         <header class="flex flex-col md:flex-row md:items-end justify-between gap-lg mb-xl">
