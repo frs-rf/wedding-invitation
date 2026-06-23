@@ -1,18 +1,9 @@
 <script setup lang="ts">
-import AppLayout from '@/Layouts/AppLayout.vue'
-import { Head, useForm } from '@inertiajs/vue3'
+import { Head, useForm, Link } from '@inertiajs/vue3'
 import { watch, onMounted } from 'vue'
 import { usePage } from '@inertiajs/vue3'
 import { toast } from 'vue-sonner'
-
-// Shadcn UI Components
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/Components/ui/card'
-import { Button } from '@/Components/ui/button'
-import { Input } from '@/Components/ui/input'
-import { Label } from '@/Components/ui/label'
-
-// Icons
-import { CheckCircle2, LayoutTemplate, Type, MapPin, Heart, Loader2 } from 'lucide-vue-next'
+import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 
 const props = defineProps<{
     wedding: any
@@ -33,7 +24,6 @@ const form = useForm({
 
 const pageProps = usePage().props
 
-// Watch for flash messages from Inertia
 watch(() => pageProps.flash, (flash: any) => {
     if (flash?.success) {
         toast.success(flash.success)
@@ -57,122 +47,132 @@ const submit = () => {
 </script>
 
 <template>
-    <AppLayout title="Tema & Konten">
-        <Head title="Tema & Konten" />
+    <Head title="Tema & Konten" />
 
-        <div class="space-y-6">
-            <!-- Header -->
-            <div>
-                <h2 class="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">Tema & Konten Undangan</h2>
-                <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Personalisasi tampilan undangan dan lengkapi detail acara pernikahan Anda.</p>
-            </div>
+    <DashboardLayout>
+        <!-- Top Navigation Area / Header specific to this page inside DashboardLayout -->
+        <template #sidebar-nav>
+            <Link href="#" class="flex items-center gap-md px-md py-sm text-[#5d5e66] hover:bg-[#eae7eb] rounded-xl transition-all text-[14px]">
+                <span class="material-symbols-outlined text-[20px]">dashboard</span>
+                <span>Dashboard</span>
+            </Link>
+            <Link :href="route('pengantin.themes.index')" class="flex items-center gap-md px-md py-sm bg-[#e2dfff] text-[#1f108e] rounded-xl font-bold transition-all text-[14px]">
+                <span class="material-symbols-outlined text-[20px]">palette</span>
+                <span>Tema & Undangan</span>
+            </Link>
+            <Link href="#" class="flex items-center gap-md px-md py-sm text-[#5d5e66] hover:bg-[#eae7eb] rounded-xl transition-all text-[14px]">
+                <span class="material-symbols-outlined text-[20px]">book</span>
+                <span>Buku Tamu</span>
+            </Link>
+        </template>
 
-            <form @submit.prevent="submit" class="space-y-8">
-                <!-- Galeri Tema -->
-                <Card class="border-zinc-200 dark:border-zinc-800 shadow-sm">
-                    <CardHeader>
-                        <div class="flex items-center gap-2">
-                            <LayoutTemplate class="h-5 w-5 text-indigo-500" />
-                            <CardTitle>Pilih Tema Undangan</CardTitle>
-                        </div>
-                        <CardDescription>Pilih desain visual yang paling cocok dengan nuansa pernikahan Anda.</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                            <div v-for="theme in themes" :key="theme.id" 
-                                class="relative rounded-xl border-2 cursor-pointer transition-all duration-200 overflow-hidden group hover:shadow-md"
-                                :class="[
-                                    form.theme_id === theme.id 
-                                        ? 'border-indigo-600 ring-2 ring-indigo-600/20' 
-                                        : 'border-zinc-200 dark:border-zinc-800 hover:border-indigo-400 dark:hover:border-indigo-500'
-                                ]"
-                                @click="form.theme_id = theme.id">
-                                
-                                <div class="aspect-video bg-zinc-100 dark:bg-zinc-900 flex items-center justify-center p-4">
-                                    <div class="text-center">
-                                        <div class="w-16 h-16 mx-auto rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center mb-3">
-                                            <LayoutTemplate class="h-8 w-8 text-indigo-600 dark:text-indigo-400" />
-                                        </div>
-                                        <h3 class="font-bold text-lg text-zinc-900 dark:text-zinc-100">{{ theme.theme_name }}</h3>
-                                    </div>
-                                </div>
-                                
-                                <div class="absolute inset-x-0 bottom-0 p-3 bg-white/90 dark:bg-zinc-950/90 backdrop-blur-sm border-t border-zinc-100 dark:border-zinc-800 flex justify-between items-center transform translate-y-full transition-transform duration-200"
-                                     :class="{ 'translate-y-0': form.theme_id === theme.id }">
-                                    <span class="text-sm font-medium text-indigo-600 dark:text-indigo-400">Terpilih</span>
-                                    <CheckCircle2 class="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
-                                </div>
-                            </div>
-                        </div>
-                        <p v-if="form.errors.theme_id" class="text-sm text-red-500 mt-3">{{ form.errors.theme_id }}</p>
-                    </CardContent>
-                </Card>
-
-                <!-- Editor Konten -->
-                <Card class="border-zinc-200 dark:border-zinc-800 shadow-sm">
-                    <CardHeader>
-                        <div class="flex items-center gap-2">
-                            <Type class="h-5 w-5 text-indigo-500" />
-                            <CardTitle>Isi Konten Undangan</CardTitle>
-                        </div>
-                        <CardDescription>Lengkapi data nama mempelai, lokasi, dan detail acara.</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-8">
-                            <div class="space-y-2">
-                                <Label for="bride_name">Nama Mempelai Wanita</Label>
-                                <Input id="bride_name" v-model="form.theme_data.bride_name" placeholder="Riri Amelia" />
-                            </div>
-                            
-                            <div class="space-y-2">
-                                <Label for="groom_name">Nama Mempelai Pria</Label>
-                                <Input id="groom_name" v-model="form.theme_data.groom_name" placeholder="Budi Santoso" />
-                            </div>
-                            
-                            <div class="md:col-span-2 space-y-2">
-                                <div class="flex items-center gap-2 mb-1">
-                                    <MapPin class="h-4 w-4 text-zinc-500" />
-                                    <Label for="venue_name" class="!mb-0">Nama Gedung / Lokasi Acara</Label>
-                                </div>
-                                <Input id="venue_name" v-model="form.theme_data.venue_name" placeholder="Gedung Balai Kartini" />
-                            </div>
-                            
-                            <div class="md:col-span-2 space-y-2">
-                                <Label for="venue_address">Alamat Lengkap Lokasi</Label>
-                                <textarea id="venue_address" 
-                                    class="flex min-h-[80px] w-full rounded-md border border-zinc-200 bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-zinc-500 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-zinc-950 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-800 dark:placeholder:text-zinc-400 dark:focus-visible:ring-zinc-300" 
-                                    v-model="form.theme_data.venue_address" 
-                                    placeholder="Jl. Jend. Gatot Subroto Kav. 37, Jakarta Selatan"
-                                    rows="3"></textarea>
-                            </div>
-                            
-                            <div class="md:col-span-2 space-y-2">
-                                <Label for="gmap_link">Link Google Maps</Label>
-                                <Input id="gmap_link" v-model="form.theme_data.gmap_link" placeholder="https://maps.app.goo.gl/..." />
-                            </div>
-                            
-                            <div class="md:col-span-2 space-y-2">
-                                <div class="flex items-center gap-2 mb-1">
-                                    <Heart class="h-4 w-4 text-pink-500" />
-                                    <Label for="love_story" class="!mb-0">Kisah Cinta Singkat (Opsional)</Label>
-                                </div>
-                                <textarea id="love_story" 
-                                    class="flex min-h-[100px] w-full rounded-md border border-zinc-200 bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-zinc-500 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-zinc-950 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-800 dark:placeholder:text-zinc-400 dark:focus-visible:ring-zinc-300" 
-                                    v-model="form.theme_data.love_story" 
-                                    placeholder="Ceritakan awal mula kalian bertemu..."
-                                    rows="4"></textarea>
-                            </div>
-                        </div>
-                    </CardContent>
-                    <CardFooter class="bg-zinc-50/50 dark:bg-zinc-900/50 px-6 py-4 border-t border-zinc-100 dark:border-zinc-800 flex justify-end">
-                        <Button type="submit" :disabled="form.processing || !form.theme_id" class="min-w-[180px]">
-                            <Loader2 v-if="form.processing" class="mr-2 h-4 w-4 animate-spin" />
-                            Simpan Tema & Konten
-                        </Button>
-                    </CardFooter>
-                </Card>
-            </form>
-
+        <div class="mb-xl">
+            <h2 class="font-display text-[28px] tracking-tight text-[#1b1b1e] font-bold">Tema & Konten Undangan</h2>
+            <p class="font-body-md text-[#5d5e66] mt-xs">Personalisasi tampilan undangan dan lengkapi detail acara pernikahan Anda.</p>
         </div>
-    </AppLayout>
+
+        <form @submit.prevent="submit" class="space-y-xl max-w-5xl">
+            <!-- Theme Selection Section -->
+            <section class="bg-white border border-[#e4e1e6] rounded-2xl overflow-hidden shadow-sm">
+                <div class="px-xl py-lg border-b border-[#e4e1e6] bg-[#fbf8fc] flex items-center gap-sm">
+                    <span class="material-symbols-outlined text-[#1f108e]">web</span>
+                    <h3 class="font-headline-md text-[18px] font-bold text-[#1b1b1e]">Pilih Tema Undangan</h3>
+                </div>
+                <div class="p-xl">
+                    <p class="font-body-md text-[14px] text-[#5d5e66] mb-lg">Pilih desain visual yang paling cocok dengan nuansa pernikahan Anda.</p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-lg">
+                        <div v-for="theme in themes" :key="theme.id" 
+                            class="relative rounded-2xl border-2 cursor-pointer transition-all duration-200 overflow-hidden group h-48 bg-[#f6f2f7] hover:shadow-md flex flex-col items-center justify-center"
+                            :class="[
+                                form.theme_id === theme.id 
+                                    ? 'border-[#1f108e]' 
+                                    : 'border-[#e4e1e6] hover:border-[#a9a7ff]'
+                            ]"
+                            @click="form.theme_id = theme.id">
+                            
+                            <div class="w-12 h-12 rounded-full bg-[#e2dfff] flex items-center justify-center mb-md">
+                                <span class="material-symbols-outlined text-[#1f108e]">web_stories</span>
+                            </div>
+                            <h3 class="font-bold text-[16px] text-[#1b1b1e]">{{ theme.theme_name }}</h3>
+                            
+                            <!-- Selected Indicator -->
+                            <div v-if="form.theme_id === theme.id" class="absolute top-sm right-sm w-6 h-6 bg-[#1f108e] rounded-full flex items-center justify-center">
+                                <span class="material-symbols-outlined text-white text-[16px]">check</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p v-if="form.errors.theme_id" class="text-sm text-[#ba1a1a] mt-md">{{ form.errors.theme_id }}</p>
+                </div>
+            </section>
+
+            <!-- Content Editor Section -->
+            <section class="bg-white border border-[#e4e1e6] rounded-2xl overflow-hidden shadow-sm">
+                <div class="px-xl py-lg border-b border-[#e4e1e6] bg-[#fbf8fc] flex items-center gap-sm">
+                    <span class="material-symbols-outlined text-[#1f108e]">edit_document</span>
+                    <h3 class="font-headline-md text-[18px] font-bold text-[#1b1b1e]">Isi Konten Undangan</h3>
+                </div>
+                <div class="p-xl">
+                    <p class="font-body-md text-[14px] text-[#5d5e66] mb-lg">Lengkapi data nama mempelai, lokasi, dan detail acara.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-xl gap-y-lg">
+                        <!-- Bride Name -->
+                        <div class="space-y-sm">
+                            <label for="bride_name" class="font-label-sm text-[14px] font-bold text-[#1b1b1e]">Nama Mempelai Wanita</label>
+                            <input id="bride_name" v-model="form.theme_data.bride_name" type="text" placeholder="Budi Santoso 1" 
+                                class="w-full border border-[#c8c4d5] rounded-xl px-md py-sm font-body-md text-[14px] focus:ring-2 focus:ring-[#1f108e] focus:border-transparent outline-none transition-all placeholder:text-[#5d5e66]">
+                        </div>
+                        
+                        <!-- Groom Name -->
+                        <div class="space-y-sm">
+                            <label for="groom_name" class="font-label-sm text-[14px] font-bold text-[#1b1b1e]">Nama Mempelai Pria</label>
+                            <input id="groom_name" v-model="form.theme_data.groom_name" type="text" placeholder="Riri Andayani 1" 
+                                class="w-full border border-[#c8c4d5] rounded-xl px-md py-sm font-body-md text-[14px] focus:ring-2 focus:ring-[#1f108e] focus:border-transparent outline-none transition-all placeholder:text-[#5d5e66]">
+                        </div>
+                        
+                        <!-- Venue Name -->
+                        <div class="md:col-span-2 space-y-sm">
+                            <label for="venue_name" class="font-label-sm text-[14px] font-bold text-[#1b1b1e] flex items-center gap-xs">
+                                <span class="material-symbols-outlined text-[18px]">location_on</span> Nama Gedung / Lokasi Acara
+                            </label>
+                            <input id="venue_name" v-model="form.theme_data.venue_name" type="text" placeholder="Gedung Balai Kartini" 
+                                class="w-full border border-[#c8c4d5] rounded-xl px-md py-sm font-body-md text-[14px] focus:ring-2 focus:ring-[#1f108e] focus:border-transparent outline-none transition-all placeholder:text-[#5d5e66]">
+                        </div>
+                        
+                        <!-- Venue Address -->
+                        <div class="md:col-span-2 space-y-sm">
+                            <label for="venue_address" class="font-label-sm text-[14px] font-bold text-[#1b1b1e]">Alamat Lengkap Lokasi</label>
+                            <textarea id="venue_address" v-model="form.theme_data.venue_address" rows="3" placeholder="Jl. Jend. Gatot Subroto Kav. 37, Jakarta Selatan"
+                                class="w-full border border-[#c8c4d5] rounded-xl px-md py-sm font-body-md text-[14px] focus:ring-2 focus:ring-[#1f108e] focus:border-transparent outline-none transition-all placeholder:text-[#5d5e66]"></textarea>
+                        </div>
+                        
+                        <!-- Google Maps Link -->
+                        <div class="md:col-span-2 space-y-sm">
+                            <label for="gmap_link" class="font-label-sm text-[14px] font-bold text-[#1b1b1e]">Link Google Maps</label>
+                            <input id="gmap_link" v-model="form.theme_data.gmap_link" type="text" placeholder="https://maps.app.goo.gl/..." 
+                                class="w-full border border-[#c8c4d5] rounded-xl px-md py-sm font-body-md text-[14px] focus:ring-2 focus:ring-[#1f108e] focus:border-transparent outline-none transition-all placeholder:text-[#5d5e66]">
+                        </div>
+                        
+                        <!-- Love Story -->
+                        <div class="md:col-span-2 space-y-sm">
+                            <label for="love_story" class="font-label-sm text-[14px] font-bold text-[#1b1b1e] flex items-center gap-xs">
+                                <span class="material-symbols-outlined text-[18px] text-[#ba1a1a]">favorite</span> Kisah Cinta Singkat (Opsional)
+                            </label>
+                            <textarea id="love_story" v-model="form.theme_data.love_story" rows="4" placeholder="Ceritakan awal mula kalian bertemu..."
+                                class="w-full border border-[#c8c4d5] rounded-xl px-md py-sm font-body-md text-[14px] focus:ring-2 focus:ring-[#1f108e] focus:border-transparent outline-none transition-all placeholder:text-[#5d5e66]"></textarea>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Footer actions -->
+                <div class="px-xl py-lg border-t border-[#e4e1e6] bg-[#fbf8fc] flex justify-end">
+                    <button type="submit" :disabled="form.processing || !form.theme_id" 
+                        class="px-xl py-sm bg-[#1b1b1e] text-white rounded-xl font-label-sm text-[14px] font-bold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-sm">
+                        <span v-if="form.processing" class="material-symbols-outlined animate-spin text-[18px]">progress_activity</span>
+                        Simpan Tema & Konten
+                    </button>
+                </div>
+            </section>
+        </form>
+    </DashboardLayout>
 </template>
