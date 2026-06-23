@@ -1,11 +1,45 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
 @import "tw-animate-css";
 @import "shadcn-vue/tailwind.css";
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    vertical-align: middle;
+  }
+  
+  /* Custom scrollbar for clean UI */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #e4e1e6; border-radius: 10px; }
+  .dark ::-webkit-scrollbar-thumb { background: #464553; }
+  
+  /* Micro-interactions */
+  .btn-hover-effect { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+  .btn-hover-effect:active { transform: scale(0.98); }
+
+  /* Charts */
+  .chart-donut {
+    background: conic-gradient(var(--tw-color-primary) 0% 72%, var(--tw-color-primary-fixed) 72% 100%);
+    border-radius: 50%;
+    position: relative;
+  }
+  .chart-donut::after {
+    content: '';
+    position: absolute;
+    inset: 20%;
+    background: #ffffff;
+    border-radius: 50%;
+  }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+}
 
 @layer base {
   .theme {

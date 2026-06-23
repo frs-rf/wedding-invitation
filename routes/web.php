@@ -70,3 +70,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+// UI Preview Routes (Added for Stitch AI Design Review)
+Route::prefix('ui-preview')->group(function () {
+    Route::get('/vendor/dashboard', function () {
+        return Inertia::render('Vendor/Dashboard');
+    })->name('preview.vendor.dashboard');
+
+    Route::get('/couple/dashboard', function () {
+        return Inertia::render('Couple/Dashboard');
+    })->name('preview.couple.dashboard');
+
+    Route::get('/couple/guests', function () {
+        return Inertia::render('Couple/GuestList');
+    })->name('preview.couple.guests');
+
+    Route::get('/receptionist/scanner', function () {
+        return Inertia::render('Receptionist/Scanner');
+    })->name('preview.receptionist.scanner');
+});
