@@ -15,15 +15,31 @@ class DashboardController extends Controller
         $user = $request->user();
 
         return match ($user->role) {
-            Role::SuperAdmin => Inertia::render('SuperAdmin/Dashboard'),
-            Role::Vendor => $this->vendorDashboard($user),
+            Role::SuperAdmin => $this->superadminDashboard($user),
+            Role::Vendor => redirect()->route('vendor.clients.index'),
             Role::Pengantin => $this->pengantinDashboard($user),
             Role::Receptionist => abort(403, 'Resepsionis tidak memiliki dashboard. Gunakan magic link yang diberikan.'),
         };
     }
 
+    private function superadminDashboard($user)
+    {
+        $totalVendors = DB::table('users')->where('role', Role::Vendor->value)->count();
+        $totalPengantin = DB::table('users')->where('role', Role::Pengantin->value)->count();
+        $totalGuests = DB::table('guests')->count();
+
+        return Inertia::render('SuperAdmin/Dashboard', [
+            'stats' => [
+                'total_vendors' => $totalVendors,
+                'total_pengantin' => $totalPengantin,
+                'total_guests' => $totalGuests,
+            ],
+        ]);
+    }
+
     private function vendorDashboard($user)
     {
+        // This is no longer used, as vendor is redirected directly to clients.index
         $activeClients = $user->clients()->count();
         
         $totalGuests = DB::table('guests')
