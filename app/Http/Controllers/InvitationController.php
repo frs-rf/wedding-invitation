@@ -36,7 +36,9 @@ class InvitationController extends Controller
 
         $qrCodeBase64 = $result->getDataUri();
 
-        return Inertia::render('Invitation/Show', [
+        $viewPath = $wedding->theme ? $wedding->theme->view_path : 'Themes/GardenParty';
+
+        return Inertia::render('Invitation/' . $viewPath, [
             'wedding' => $wedding,
             'theme' => $wedding->theme,
             'guest' => $guest,

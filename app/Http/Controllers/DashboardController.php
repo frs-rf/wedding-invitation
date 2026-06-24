@@ -28,12 +28,17 @@ class DashboardController extends Controller
         $totalPengantin = DB::table('users')->where('role', Role::Pengantin->value)->count();
         $totalGuests = DB::table('guests')->count();
 
+        $allUsers = \App\Models\User::whereIn('role', [Role::Vendor, Role::Pengantin])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         return Inertia::render('SuperAdmin/Dashboard', [
             'stats' => [
                 'total_vendors' => $totalVendors,
                 'total_pengantin' => $totalPengantin,
                 'total_guests' => $totalGuests,
             ],
+            'users' => $allUsers,
         ]);
     }
 

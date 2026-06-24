@@ -52,6 +52,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('clients/{client}/impersonate', [ClientController::class, 'impersonate'])->name('clients.impersonate');
     });
 
+    // Super Admin Routes
+    Route::middleware('role:SuperAdmin')->prefix('superadmin')->name('superadmin.')->group(function () {
+        Route::post('impersonate/{user}', [\App\Http\Controllers\SuperAdminController::class, 'impersonate'])->name('impersonate');
+    });
+
     // Pengantin Routes
     Route::middleware('role:Pengantin')->prefix('pengantin')->name('pengantin.')->group(function () {
         Route::post('generate-token', [\App\Http\Controllers\DashboardController::class, 'generateToken'])->name('generate-token');

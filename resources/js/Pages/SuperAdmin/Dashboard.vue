@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
-import { Head } from '@inertiajs/vue3'
+import { Head, router } from '@inertiajs/vue3'
 
 const props = defineProps<{
     stats?: {
@@ -8,7 +8,18 @@ const props = defineProps<{
         total_pengantin?: number
         total_guests?: number
     }
+    users?: Array<{
+        id: number
+        name: string
+        email: string
+        role: string
+        created_at: string
+    }>
 }>()
+
+const impersonate = (user: any) => {
+    router.post(route('superadmin.impersonate', user.id));
+}
 </script>
 
 <template>
@@ -64,6 +75,46 @@ const props = defineProps<{
                 <div class="mt-lg">
                     <p class="font-display text-[36px] font-bold text-[#1b1b1e]">{{ stats?.total_guests ?? 0 }}</p>
                     <p class="font-label-sm text-[12px] text-[#5d5e66]">Tamu undangan keseluruhan</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- User Management Table -->
+        <section class="mb-xl">
+            <h3 class="font-headline-md text-[24px] font-bold text-[#1b1b1e] mb-md">Manajemen Pengguna (Vendor & Pengantin)</h3>
+            <div class="bg-white border border-[#e4e1e6] rounded-xl overflow-hidden shadow-sm">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="bg-[#fbf8fc] border-b border-[#e4e1e6]">
+                            <tr>
+                                <th class="px-xl py-md font-label-sm text-[12px] font-bold text-[#5d5e66] uppercase">Nama</th>
+                                <th class="px-xl py-md font-label-sm text-[12px] font-bold text-[#5d5e66] uppercase">Email</th>
+                                <th class="px-xl py-md font-label-sm text-[12px] font-bold text-[#5d5e66] uppercase">Peran (Role)</th>
+                                <th class="px-xl py-md font-label-sm text-[12px] font-bold text-[#5d5e66] uppercase">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-[#e4e1e6]">
+                            <tr v-for="user in users" :key="user.id" class="hover:bg-[#fbf8fc] transition-colors">
+                                <td class="px-xl py-md font-label-sm text-[14px] font-bold text-[#1b1b1e]">{{ user.name }}</td>
+                                <td class="px-xl py-md text-[14px] text-[#5d5e66]">{{ user.email }}</td>
+                                <td class="px-xl py-md">
+                                    <span class="px-md py-xs rounded-full text-[10px] font-bold uppercase"
+                                          :class="user.role === 'Vendor' ? 'bg-[#e2f5ea] text-[#006b3f]' : 'bg-[#e2dfff] text-[#1f108e]'">
+                                        {{ user.role }}
+                                    </span>
+                                </td>
+                                <td class="px-xl py-md">
+                                    <button @click="impersonate(user)" class="flex items-center gap-xs text-[12px] font-bold text-[#1b1b1e] border border-[#c8c4d5] px-sm py-xs rounded hover:bg-[#f0edf1] transition-colors">
+                                        <span class="material-symbols-outlined text-[16px]">login</span>
+                                        Akses Akun
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr v-if="!users || users.length === 0">
+                                <td colspan="4" class="px-xl py-xl text-center text-[#5d5e66] text-[14px]">Belum ada pengguna.</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </section>
