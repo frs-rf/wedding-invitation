@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3'
+import { computed } from 'vue'
 
 const props = defineProps<{
     wedding: any
@@ -8,101 +9,111 @@ const props = defineProps<{
     qrCode: string
 }>()
 
-const themeData = props.wedding.theme_data || {}
+const themeData = computed(() => props.wedding?.theme_data || {})
+const blocks = computed(() => themeData.value.blocks || [])
+
+const sortedBlocks = computed(() => {
+    return blocks.value.filter((b: any) => b.enabled)
+})
 </script>
 
 <template>
-    <div class="min-h-screen relative bg-cover bg-center overflow-x-hidden font-sans text-gray-800" 
-         style="background-image: url('https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=2069&auto=format&fit=crop'); background-attachment: fixed;">
-        
+    <div class="min-h-screen bg-[#F0F4EC] font-sans text-[#2C3E2D] overflow-x-hidden selection:bg-[#8AA889] selection:text-white">
         <Head :title="`Undangan Pernikahan - ${themeData.bride_name || 'Pengantin'} & ${themeData.groom_name || 'Pengantin'}`" />
 
-        <!-- Overlay for better readability -->
-        <div class="absolute inset-0 bg-black/50 backdrop-blur-[2px] fixed"></div>
+        <!-- Green Leaves Decoration -->
+        <div class="fixed top-0 left-0 w-72 h-72 bg-[#D1E2C4] rounded-full mix-blend-multiply filter blur-3xl opacity-50 -z-10 translate-x-[-20%] translate-y-[-20%]"></div>
+        <div class="fixed bottom-0 right-0 w-80 h-80 bg-[#E8E2C1] rounded-full mix-blend-multiply filter blur-3xl opacity-50 -z-10 translate-x-[20%] translate-y-[20%]"></div>
 
-        <div class="relative z-10 flex flex-col items-center min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+        <div class="relative z-10 max-w-3xl mx-auto px-4 py-12 sm:px-6 lg:px-8 flex flex-col gap-12">
             
-            <!-- Main Invitation Card with Glassmorphism -->
-            <div class="w-full max-w-2xl bg-white/10 backdrop-blur-md border border-white/20 p-8 sm:p-12 rounded-3xl shadow-2xl mt-4 sm:mt-10 transform transition duration-500 hover:scale-[1.01]">
-                
-                <div class="text-center mb-10">
-                    <p class="text-white/80 text-sm tracking-widest uppercase mb-3 font-medium">The Wedding Of</p>
-                    <h1 class="text-5xl sm:text-6xl lg:text-7xl font-serif text-white mb-6 drop-shadow-md">
-                        {{ themeData.bride_name || 'Budi' }} <span class="text-pink-300">&</span> {{ themeData.groom_name || 'Riri' }}
+            <template v-for="block in sortedBlocks" :key="block.id">
+
+                <!-- HERO BLOCK -->
+                <div v-if="block.type === 'hero'" v-motion-fade-visible-once class="text-center bg-white/70 backdrop-blur-md rounded-[3rem] p-12 shadow-lg border border-white/50">
+                    <p class="text-[#5F7A61] text-sm tracking-widest uppercase mb-4">You are invited to the wedding of</p>
+                    <h1 class="text-5xl sm:text-6xl font-serif text-[#2C3E2D] mb-4">
+                        {{ themeData.bride_name || 'Budi' }} <span class="text-[#8AA889] mx-2">&</span> {{ themeData.groom_name || 'Riri' }}
                     </h1>
                 </div>
 
-                <div class="text-center bg-white/10 rounded-2xl p-8 mb-10 border border-white/20 shadow-inner">
-                    <p class="text-white/90 text-lg mb-2">Yth. Bapak/Ibu/Saudara/i</p>
-                    <h2 class="text-3xl font-bold text-white mb-2 tracking-wide">{{ guest.name }}</h2>
-                    <p class="text-white/80 text-sm">{{ guest.company_or_address }}</p>
-                    <div v-if="guest.is_vip" class="mt-4 inline-block px-4 py-1.5 bg-gradient-to-r from-yellow-400 to-yellow-600 text-white text-xs font-bold rounded-full uppercase tracking-wider shadow-lg">
-                        ⭐ VIP Guest
+                <!-- GUEST BLOCK -->
+                <div v-if="block.type === 'guest'" v-motion-slide-visible-once-bottom class="text-center bg-white rounded-3xl p-8 shadow-sm">
+                    <p class="text-[#5F7A61] mb-2">Dear,</p>
+                    <h2 class="text-2xl font-bold text-[#2C3E2D] mb-1">{{ guest.name || 'Tamu Undangan' }}</h2>
+                    <p class="text-[#5F7A61] text-sm">{{ guest.company_or_address || 'Di Tempat' }}</p>
+                    <div v-if="guest.is_vip" class="mt-4 inline-block px-3 py-1 bg-[#8AA889] text-white text-xs font-bold rounded-full uppercase tracking-wider">
+                        VIP
                     </div>
                 </div>
 
-                <div class="text-center mb-10 text-white space-y-4 px-4">
-                    <p class="italic text-lg text-white/90 leading-relaxed font-serif">
+                <!-- STORY BLOCK -->
+                <div v-if="block.type === 'story'" v-motion-fade-visible-once class="text-center px-4">
+                    <div class="w-12 h-12 bg-[#8AA889]/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="material-symbols-outlined text-[#5F7A61]">favorite</span>
+                    </div>
+                    <p class="text-lg text-[#2C3E2D] italic">
                         "{{ themeData.love_story || "Kehadiran dan doa restu Anda adalah anugerah terindah bagi kami." }}"
                     </p>
-                    <div class="w-16 h-px bg-white/40 mx-auto mt-6"></div>
                 </div>
 
-                <!-- Event Details -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-center text-white mb-10">
-                    <div class="bg-white/10 p-6 rounded-2xl border border-white/10 hover:bg-white/20 transition duration-300">
-                        <svg class="w-8 h-8 mx-auto mb-4 text-pink-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                        <h3 class="font-bold text-lg mb-2">Tanggal Acara</h3>
-                        <p class="text-white/90">{{ wedding.event_date ? new Date(wedding.event_date).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : 'Segera Diumumkan' }}</p>
+                <!-- EVENT BLOCK -->
+                <div v-if="block.type === 'event'" v-motion-slide-visible-once-bottom class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-3xl p-8 shadow-sm text-center">
+                        <div class="w-12 h-12 bg-[#8AA889]/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span class="material-symbols-outlined text-[#5F7A61]">event</span>
+                        </div>
+                        <h3 class="font-bold text-[#2C3E2D] text-lg mb-2">Waktu</h3>
+                        <p class="text-[#5F7A61]">{{ wedding.event_date ? new Date(wedding.event_date).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : 'Segera Diumumkan' }}</p>
                     </div>
-                    <div class="bg-white/10 p-6 rounded-2xl border border-white/10 hover:bg-white/20 transition duration-300">
-                        <svg class="w-8 h-8 mx-auto mb-4 text-pink-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                        <h3 class="font-bold text-lg mb-2">Lokasi</h3>
-                        <p class="text-white/90">{{ themeData.venue_name || 'Gedung Pernikahan' }}</p>
+                    <div class="bg-white rounded-3xl p-8 shadow-sm text-center">
+                        <div class="w-12 h-12 bg-[#8AA889]/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span class="material-symbols-outlined text-[#5F7A61]">location_on</span>
+                        </div>
+                        <h3 class="font-bold text-[#2C3E2D] text-lg mb-2">Lokasi</h3>
+                        <p class="text-[#2C3E2D] font-medium">{{ themeData.venue_name || 'Gedung Pernikahan' }}</p>
+                        <p class="text-[#5F7A61] text-sm mt-1">{{ themeData.venue_address || 'Alamat lokasi akan diumumkan.' }}</p>
                     </div>
                 </div>
 
-                <div v-if="themeData.venue_address" class="text-center text-white/80 mb-6 text-sm px-4">
-                    {{ themeData.venue_address }}
-                </div>
-                
-                <div v-if="themeData.gmap_link" class="text-center mb-12">
-                    <a :href="themeData.gmap_link" target="_blank" class="inline-flex items-center px-8 py-3 bg-white/20 hover:bg-white/30 border border-white/40 text-white rounded-full font-medium transition duration-300 backdrop-blur-md shadow-lg">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+                <!-- MAP BLOCK -->
+                <div v-if="block.type === 'map' && themeData.gmap_link" v-motion-fade-visible-once class="text-center">
+                    <a :href="themeData.gmap_link" target="_blank" class="inline-flex items-center px-8 py-3 bg-[#8AA889] hover:bg-[#728F71] text-white rounded-full font-bold transition duration-300 shadow-md">
+                        <span class="material-symbols-outlined mr-2">map</span>
                         Buka di Google Maps
                     </a>
                 </div>
 
-                <!-- QR Code Section -->
-                <div class="mt-8 bg-white/95 rounded-3xl p-8 sm:p-10 text-center shadow-2xl border-4 border-white/50">
-                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Tiket Masuk Anda</h3>
-                    <p class="text-gray-500 mb-8 text-sm px-4">Tunjukkan QR Code ini kepada resepsionis saat Anda tiba di lokasi acara untuk proses Check-in.</p>
+                <!-- QR CODE BLOCK -->
+                <div v-if="block.type === 'qrcode'" v-motion-slide-visible-once-bottom class="bg-white/80 backdrop-blur-md rounded-[3rem] p-10 text-center shadow-lg border border-white/50">
+                    <h3 class="text-xl font-bold text-[#2C3E2D] mb-2">Akses Masuk</h3>
+                    <p class="text-[#5F7A61] mb-8 text-sm">Tunjukkan QR Code ini kepada resepsionis.</p>
                     
-                    <div class="inline-block p-4 bg-white rounded-2xl shadow-inner border border-gray-100">
-                        <img :src="qrCode" alt="QR Code Tamu" class="w-56 h-56 mx-auto" />
+                    <div class="bg-white p-4 rounded-2xl shadow-sm inline-block mb-6">
+                        <img :src="qrCode" alt="QR Code Tamu" class="w-48 h-48 mx-auto rounded-xl object-cover" />
                     </div>
                     
-                    <div class="mt-6">
-                        <p class="text-xs text-gray-400 font-medium uppercase tracking-widest mb-1">Kode Unik:</p>
-                        <p class="text-[10px] sm:text-xs text-gray-400 font-mono tracking-widest break-all px-2 select-all">
-                            {{ guest.secure_token }}
+                    <div>
+                        <p class="text-xs text-[#5F7A61] uppercase tracking-widest mb-2">Token Unik</p>
+                        <p class="text-sm font-mono font-bold text-[#2C3E2D] bg-[#F0F4EC] py-2 px-4 rounded-xl inline-block">
+                            {{ guest.secure_token || 'TOKEN-ABC-123' }}
                         </p>
                     </div>
                 </div>
-                
-            </div>
-            
-            <footer class="mt-16 text-white/50 text-sm pb-8 text-center relative z-10 tracking-wider">
-                <p>Powered by <span class="font-semibold text-white/70">Wedding Invitation SaaS</span></p>
+
+            </template>
+
+            <footer class="mt-8 text-[#5F7A61] text-sm text-center opacity-70">
+                <p>Powered by <span class="font-bold">Wedding SaaS</span></p>
             </footer>
         </div>
     </div>
 </template>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap');
 
-h1, .font-serif {
-    font-family: 'Playfair Display', serif;
-}
+.font-serif { font-family: 'Lora', serif; }
+.font-sans { font-family: 'Nunito', sans-serif; }
 </style>
