@@ -1,0 +1,20 @@
+name: Debug VPS
+on:
+  workflow_dispatch:
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH and Debug
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          passphrase: ${{ secrets.VPS_PASSPHRASE }}
+          port: ${{ secrets.VPS_PORT || '22' }}
+          script: |
+            cd /var/www/wedding-invitation/app
+            docker compose ps
+            docker compose logs --tail=100 app
+            docker compose logs --tail=100 web
