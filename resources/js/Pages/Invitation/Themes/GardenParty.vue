@@ -32,8 +32,10 @@ const sortedBlocks = computed(() => {
                 <!-- HERO BLOCK -->
                 <div v-if="block.type === 'hero'" v-motion-fade-visible-once class="text-center bg-white/70 backdrop-blur-md rounded-[3rem] p-12 shadow-lg border border-white/50">
                     <p class="text-[#5F7A61] text-sm tracking-widest uppercase mb-4">You are invited to the wedding of</p>
-                    <h1 class="text-5xl sm:text-6xl font-serif text-[#2C3E2D] mb-4">
-                        {{ themeData.bride_name || 'Budi' }} <span class="text-[#8AA889] mx-2">&</span> {{ themeData.groom_name || 'Riri' }}
+                    <h1 class="text-5xl sm:text-6xl font-serif text-[#2C3E2D] mb-4 flex flex-col items-center gap-2">
+                        <span>{{ themeData.bride_name || 'Budi' }}</span>
+                        <span class="text-[#8AA889] text-4xl">&</span>
+                        <span>{{ themeData.groom_name || 'Riri' }}</span>
                     </h1>
                 </div>
 
@@ -58,15 +60,15 @@ const sortedBlocks = computed(() => {
                 </div>
 
                 <!-- EVENT BLOCK -->
-                <div v-if="block.type === 'event'" v-motion-slide-visible-once-bottom class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div class="bg-white rounded-3xl p-8 shadow-sm text-center">
+                <div v-if="block.type === 'event'" v-motion-slide-visible-once-bottom class="flex flex-col gap-6">
+                    <div class="bg-white rounded-3xl p-6 shadow-sm text-center">
                         <div class="w-12 h-12 bg-[#8AA889]/20 rounded-full flex items-center justify-center mx-auto mb-4">
                             <span class="material-symbols-outlined text-[#5F7A61]">event</span>
                         </div>
                         <h3 class="font-bold text-[#2C3E2D] text-lg mb-2">Waktu</h3>
                         <p class="text-[#5F7A61]">{{ wedding.event_date ? new Date(wedding.event_date).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : 'Segera Diumumkan' }}</p>
                     </div>
-                    <div class="bg-white rounded-3xl p-8 shadow-sm text-center">
+                    <div class="bg-white rounded-3xl p-6 shadow-sm text-center">
                         <div class="w-12 h-12 bg-[#8AA889]/20 rounded-full flex items-center justify-center mx-auto mb-4">
                             <span class="material-symbols-outlined text-[#5F7A61]">location_on</span>
                         </div>
@@ -90,7 +92,7 @@ const sortedBlocks = computed(() => {
                     <p class="text-[#5F7A61] mb-8 text-sm">Tunjukkan QR Code ini kepada resepsionis.</p>
                     
                     <div class="bg-white p-4 rounded-2xl shadow-sm inline-block mb-6">
-                        <img :src="qrCode" alt="QR Code Tamu" class="w-48 h-48 mx-auto rounded-xl object-cover" />
+                        <img :src="qrCode" alt="QR Code Tamu" class="w-48 h-48 mx-auto rounded-xl object-contain" />
                     </div>
                     
                     <div>

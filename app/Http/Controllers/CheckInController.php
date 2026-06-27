@@ -21,9 +21,22 @@ class CheckInController extends Controller
             abort(403, 'Token resepsionis tidak valid.');
         }
 
+        $guests = $wedding->guests()->orderBy('name')->get();
+        $totalGuests = $guests->count();
+        $checkedInGuests = $guests->where('is_checked_in', true)->count();
+        $recentActivity = $wedding->guests()
+            ->where('is_checked_in', true)
+            ->orderByDesc('checked_in_at')
+            ->take(5)
+            ->get();
+
         return Inertia::render('Receptionist/Scanner', [
             'wedding' => $wedding,
             'token' => $token,
+            'guests' => $guests,
+            'totalGuests' => $totalGuests,
+            'checkedInGuests' => $checkedInGuests,
+            'recentActivity' => $recentActivity,
         ]);
     }
 

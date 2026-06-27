@@ -70,7 +70,7 @@ const sortedBlocks = computed(() => {
                         </div>
 
                         <!-- EVENT BLOCK -->
-                        <div v-if="block.type === 'event'" v-motion-slide-visible-once-bottom class="grid grid-cols-1 md:grid-cols-2 gap-8 text-center font-sans">
+                        <div v-if="block.type === 'event'" v-motion-slide-visible-once-bottom class="flex flex-col gap-6 text-center font-sans">
                             <div class="p-6 bg-[#FDFBF7] border border-[#E8E0D5]">
                                 <span class="material-symbols-outlined text-3xl text-[#D4A373] mb-4">calendar_month</span>
                                 <h3 class="font-serif text-xl text-[#4A3B32] mb-2">Tanggal Acara</h3>
@@ -98,7 +98,7 @@ const sortedBlocks = computed(() => {
                             <p class="text-[#8C7A6B] mb-8 text-sm px-4 font-sans">Tunjukkan QR Code ini kepada resepsionis saat kedatangan.</p>
                             
                             <div class="inline-block p-4 bg-white border border-[#E8E0D5] shadow-sm">
-                                <img :src="qrCode" alt="QR Code Tamu" class="w-48 h-48 mx-auto object-cover" />
+                                <img :src="qrCode" alt="QR Code Tamu" class="w-48 h-48 mx-auto object-contain" />
                             </div>
                             
                             <div class="mt-8 font-sans">

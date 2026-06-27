@@ -16,6 +16,21 @@
         @inertiaHead
     </head>
     <body class="font-sans antialiased">
+    <script>
+        window.onerror = function(message, source, lineno, colno, error) {
+            var div = document.createElement("div");
+            div.style.background = "red";
+            div.style.color = "white";
+            div.style.padding = "20px";
+            div.style.position = "fixed";
+            div.style.zIndex = "999999";
+            div.style.top = "0";
+            div.style.left = "0";
+            div.style.width = "100%";
+            div.innerHTML = "<h1>JAVASCRIPT ERROR</h1><p>" + message + "</p><pre>" + (error ? error.stack : "") + "</pre>";
+            document.body.appendChild(div);
+        };
+    </script>
         @inertia
     </body>
 </html>

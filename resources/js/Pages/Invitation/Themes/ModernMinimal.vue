@@ -79,7 +79,7 @@ const sortedBlocks = computed(() => {
                     <p class="text-gray-500 mb-8 text-sm">Tunjukkan QR Code ini kepada resepsionis.</p>
                     
                     <div class="bg-white p-4 inline-block mb-6 shadow-sm border border-gray-100">
-                        <img :src="qrCode" alt="QR Code Tamu" class="w-48 h-48 mx-auto object-cover" />
+                        <img :src="qrCode" alt="QR Code Tamu" class="w-48 h-48 mx-auto object-contain" />
                     </div>
                     
                     <div>
