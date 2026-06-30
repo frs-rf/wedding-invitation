@@ -60,6 +60,7 @@ const ThemeComponents: Record<string, any> = {
     'Themes/FloralClassic': defineAsyncComponent(() => import('@/Pages/Invitation/Themes/FloralClassic.vue')),
     'Themes/ModernMinimal': defineAsyncComponent(() => import('@/Pages/Invitation/Themes/ModernMinimal.vue')),
     'Themes/GardenParty': defineAsyncComponent(() => import('@/Pages/Invitation/Themes/GardenParty.vue')),
+    'Themes/IvoryGrace': defineAsyncComponent(() => import('@/Pages/Invitation/Themes/IvoryGrace.vue')),
 }
 
 const selectedThemeData = computed(() => props.themes.find(t => t.id === form.theme_id))

@@ -28,12 +28,20 @@ class ThemeSeeder extends Seeder
                 'view_path' => 'Themes/GardenParty',
                 'is_active' => true,
             ],
+            [
+                'theme_name' => 'Ivory Grace',
+                'view_path' => 'Themes/IvoryGrace',
+                'is_active' => true,
+            ],
         ];
 
         foreach ($themes as $theme) {
-            Theme::create($theme);
+            Theme::updateOrCreate(
+                ['view_path' => $theme['view_path']],
+                $theme
+            );
         }
 
-        $this->command->info('3 tema berhasil dibuat.');
+        $this->command->info('Tema berhasil diperbarui.');
     }
 }
