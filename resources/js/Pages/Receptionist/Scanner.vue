@@ -116,6 +116,12 @@ const processManualCheckIn = (guest: any) => {
     processCheckIn(guest.secure_token);
 };
 
+const handleBlur = () => {
+    setTimeout(() => {
+        showManualSearch.value = false;
+    }, 200);
+};
+
 onMounted(() => {
     startScanner();
     
@@ -251,7 +257,7 @@ const formatTime = (dateStr: string) => {
                             <!-- Manual Entry Overlay -->
                             <div class="absolute bottom-md left-md right-md">
                                 <div class="relative z-50">
-                                    <input v-model="manualSearch" class="w-full bg-white/90 backdrop-blur-xl border border-[#c8c4d5] rounded-xl px-xl py-md text-[#1b1b1e] font-body-md focus:ring-2 focus:ring-[#1f108e] focus:border-transparent outline-none transition-all placeholder:text-[#5d5e66] shadow-lg" placeholder="Manual search: Guest name..." type="text" @focus="showManualSearch = true" @blur="setTimeout(() => showManualSearch = false, 200)"/>
+                                    <input v-model="manualSearch" class="w-full bg-white/90 backdrop-blur-xl border border-[#c8c4d5] rounded-xl px-xl py-md text-[#1b1b1e] font-body-md focus:ring-2 focus:ring-[#1f108e] focus:border-transparent outline-none transition-all placeholder:text-[#5d5e66] shadow-lg" placeholder="Manual search: Guest name..." type="text" @focus="showManualSearch = true" @blur="handleBlur"/>
                                     <span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-[#5d5e66]">search</span>
                                     <div class="absolute right-md top-1/2 -translate-y-1/2 flex gap-xs">
                                         <kbd class="hidden sm:inline-flex px-sm py-xs bg-white rounded border border-[#e4e1e6] text-[12px] font-bold text-[#5d5e66]">⌘</kbd>
