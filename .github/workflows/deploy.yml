@@ -6,11 +6,42 @@ on:
       - main
 
 jobs:
-  deploy:
-    name: Deploy Application
+  build_and_deploy:
+    name: Build & Deploy Application
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: false
+          load: true
+          tags: wedding-invitation-app:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Save Docker Image to Tarball
+        run: docker save wedding-invitation-app:latest | gzip > image.tar.gz
+
+      - name: Copy Files via SCP
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          passphrase: ${{ secrets.VPS_PASSPHRASE }}
+          port: ${{ secrets.VPS_PORT || '22' }}
+          source: "image.tar.gz"
+          target: "/var/www/wedding-invitation/app"
+
       - name: Execute Remote SSH Commands
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -20,8 +51,6 @@ jobs:
           passphrase: ${{ secrets.VPS_PASSPHRASE }}
           port: ${{ secrets.VPS_PORT || '22' }}
           command_timeout: 30m
-          # Ubah "cd /var/www/wedding-invitation/app" di bawah ini 
-          # ke path instalasi Anda sebenarnya di dalam VPS.
           script: |
             cd /var/www/wedding-invitation/app
             
@@ -33,9 +62,8 @@ jobs:
               cp .env.example .env
             fi
             
-            # Rebuild and extract assets
-            docker compose pull || true
-            docker compose build
+            # Load the newly built image
+            docker load -i image.tar.gz
             
             # Extract compiled frontend assets from the new image to host's public directory
             docker run --rm -v $(pwd)/public:/export wedding-invitation-app cp -a /var/www/html/public/build /export/ || true
@@ -54,5 +82,8 @@ jobs:
             
             # Restart queue worker container
             docker compose restart worker
+            
+            # Cleanup tarball to save space
+            rm image.tar.gz
             
             echo "Docker Deployment to VPS completed successfully!"
